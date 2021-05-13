@@ -1,0 +1,16 @@
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti, "Microsoft YaHei";
+}
+
+
+.jqtree-element.dd-handle {
+	cursor: pointer;
+}
+
+.jqtree-selected > div {
+	border: 2px solid #4d7496;
+}
+
+.jqtree-item-edit {
+	float: right;
+}

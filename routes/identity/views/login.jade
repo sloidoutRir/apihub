@@ -1,0 +1,18 @@
+extends ../../../views/layout
+
+block pageStyles
+    link(rel='stylesheet', href='/stylesheets/signin.css')
+
+block content
+    div(class="container")
+        form(class="form-signin", method="POST")
+            h2(class="form-signin-heading") 登录IDENTITY控制台
+            input(type='hidden', value=csrfToken, name='_csrf')
+            label(for="username", class="sr-only") 用户名
+            input(type="text", id="username", name="username", class="form-control", 
+                placeholder="Username", required, autofocus)
+            label(for="inputPassword", class="sr-only") Password
+            input(type="password", id="password", name="password", class="form-control", placeholder="Password", required)
+           
+            button(class="btn btn-lg btn-primary btn-block", type="submit") 登录 
+      

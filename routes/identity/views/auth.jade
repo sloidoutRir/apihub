@@ -1,0 +1,12 @@
+doctype html
+html(lang="zh")
+  head
+    title Authorize 
+  body
+    h1= Authorize 
+    form(method="POST")
+        div
+            input(type='hidden', value=csrfToken, name='_csrf')
+        div
+            input(type="submit", name="submit", value="Authorize")
+        

@@ -1,0 +1,64 @@
+extends layout
+
+
+block content
+    h1= title
+    form(id="uploadForm")
+        input(type="textarea", name="jwt", id="jwt")
+        br
+        input(type="file" name="media[]")
+        input(type="submit" value="Upload" id="uploadFile")
+
+    script(src='//cdn.bootcss.com/jquery/2.2.0/jquery.js')
+    script(type='text/javascript').
+        $(function(){
+            // Variable to store your files
+            var files;
+
+            // Add events
+            $('input[type=file]').on('change', prepareUpload);
+
+            // Grab the files and set them to our variable
+            function prepareUpload(event)
+            {
+                files = event.target.files;
+            }
+
+            $('#uploadFile').click(function(e){
+                e.stopPropagation(); 
+                e.preventDefault();
+
+                alert($("#jwt").val());
+
+                // START A LOADING SPINNER HERE
+
+                // Create a formdata object and add the files
+                var data = new FormData();
+                data.append('media', files[0]);
+
+                
+
+
+
+                $.ajax({
+                    url: '/api/media/upload',
+                    contentType: 'multipart/form-data',
+                    method: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    headers: {
+                        Authorization: 'Bearer ' + $("#jwt").val()
+                    },
+                    success: function(res, textStatus, jqXHR){
+                        
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        // Handle errors here
+                        console.log('ERRORS: ' + textStatus);
+                        // STOP LOADING SPINNER
+                    }
+                });
+            });
+        });

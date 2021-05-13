@@ -1,0 +1,22 @@
+extends ../../../views/layout
+
+block pageStyles
+    link(rel='stylesheet', href='/stylesheets/signin.css')
+
+block content
+    h1 Regsiter User Account
+    div(class="container")
+        form(method="POST")
+            input(type='hidden', value=csrfToken, name='_csrf')
+            label(for="username") User Name
+            input(type="text", name="username", value=(form ? form.username : ''),  class="form-control")
+            label(for="password") Password
+            input(type="password", name="password",  class="form-control")
+            label(for="repassword") Retype Password
+            input(type="password", name="repassword",  class="form-control")
+            label(for="email") Email
+            input(type="text", name="email", value=(form ? form.email : ''),  class="form-control")
+            label(for="mobile") Mobile
+            input(type="text", name="mobile", value=(form ? form.mobile : ''),  class="form-control")
+            input(type="submit", name="submit", value="Register")
+        
