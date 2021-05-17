@@ -163,8 +163,8 @@ module.exports = function(app, settings){
 					// https://api.weixin.qq.com/sns/oauth2/access_token
 					// 		?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
 					var targetUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?"
-									+ "appid=" + "wxa0c45fc6d9e269ed"
-									+ "&secret=" + "685903b8f645fa697f5df31b20be5270"
+									+ "appid=" + wechat.appId
+									+ "&secret=" + wechat.appSecret
 									+ "&code=" + code
 									+ "&grant_type=authorization_code"
 					debug("url to get wechat access token ", targetUrl);
@@ -203,6 +203,8 @@ module.exports = function(app, settings){
 											+ "&openid=" + wxOpenId
 											+ "&lang=zh_CN";	//Language should be dynamica ??
 
+						debug("getuserinfo: ", getUserInfoUri);
+						
 						webRequest.get(getUserInfoUri, function(error, response, body){
 							//Right response
 							/**
@@ -225,7 +227,7 @@ module.exports = function(app, settings){
 							//Use the body parameter to update wechat account informaiton
 							// If there is no existing wechat account we need create a new one
 							// If there is alreay existing wechat account, update the account
-							debug("user info: ", body);
+							debug("user info: ", body.errcode);
 							if(body.errcode){
 								return next(new Error(body.errmsg));
 							}
