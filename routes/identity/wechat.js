@@ -185,15 +185,16 @@ module.exports = function(app, settings){
 						*	}
 						*/
 						debug("response: ", body);
-						if(body.errcode){
-							return next(new Error(body.errmsg));
+						var data = JSON.parse(body);
+						if(data.errcode){
+							return next(new Error(data.errmsg));
 						}
 
-						var wxAccessToken 		= body.access_token
-							, wxExpiresIn 		= body.expires_in
-							, wxRefreshToken 	= body.refresh_token
-							, wxOpenId 			= body.openid
-							, scope 			= body.scope;
+						var wxAccessToken 		= data.access_token
+							, wxExpiresIn 		= data.expires_in
+							, wxRefreshToken 	= data.refresh_token
+							, wxOpenId 			= data.openid
+							, scope 			= data.scope;
 
 						//Try to get user info
 						// http：GET（请使用https协议）
@@ -204,7 +205,7 @@ module.exports = function(app, settings){
 											+ "&lang=zh_CN";	//Language should be dynamica ??
 
 						debug("getuserinfo: ", getUserInfoUri);
-						
+
 						webRequest.get(getUserInfoUri, function(error, response, body){
 							//Right response
 							/**
@@ -227,20 +228,21 @@ module.exports = function(app, settings){
 							//Use the body parameter to update wechat account informaiton
 							// If there is no existing wechat account we need create a new one
 							// If there is alreay existing wechat account, update the account
-							debug("user info: ", body.errcode);
-							if(body.errcode){
-								return next(new Error(body.errmsg));
+							var data = JSON.parse(body);
+							debug("user info: ", data.errcode);
+							if(data.errcode){
+								return next(new Error(data.errmsg));
 							}
 
-							var uOpenid			= body.openid
-								, uNickname		= body.nickname
-								, uSex 			= body.sex
-								, uProvince 	= body.province
-								, uCity 		= body.city
-								, uCountry 		= body.country
-								, uHeadimgurl	= body.headimgurl
-								, uPrivilege 	= body.privilege
-								, uUnionId 		= body.unionid;
+							var uOpenid			= data.openid
+								, uNickname		= data.nickname
+								, uSex 			= data.sex
+								, uProvince 	= data.province
+								, uCity 		= data.city
+								, uCountry 		= data.country
+								, uHeadimgurl	= data.headimgurl
+								, uPrivilege 	= data.privilege
+								, uUnionId 		= data.unionid;
 
 							models.User.find({ where: { wechatId: wxOpenId } })
 								.then(function(user){
