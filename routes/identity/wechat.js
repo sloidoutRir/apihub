@@ -91,7 +91,7 @@ module.exports = function(app, settings){
 						wechatAuthUrl.query.appid = appId; //"wxa0c45fc6d9e269ed";
 						wechatAuthUrl.query.redirect_uri 
 											  = url.format({
-													protocol: req.protocol
+													protocol: req.get('X-Forwarded-Proto') || req.protocol
 													, hostname: req.hostname
 													, pathname: "/identity/wechat/callback"
 													, query: {
@@ -279,7 +279,7 @@ module.exports = function(app, settings){
 											wechatNickname : uNickname
 											, wechatHeadimage : uHeadimgurl
 										})
-										then(function(user){
+										.then(function(user){
 											//finally componse JWT token and send back to origin request callback
 											redirectUri.query.token = composeJwtToken(user, { 
 																		expiresIn: ACCESS_TOKEN_EXPIRES_IN
