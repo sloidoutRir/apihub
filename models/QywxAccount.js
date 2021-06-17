@@ -5,8 +5,8 @@ module.exports = function(sequelize, DataTypes){
     , debug   	= require('debug')('pg');
 
 
-    var WechatAccount = sequelize.define('WechatAccount', {
-    	appId: {
+    var QywxAccount = sequelize.define('QywxAccount', {
+    	corpId: {
             type: DataTypes.STRING
             , allowNull: false
             , unique: true
@@ -22,16 +22,9 @@ module.exports = function(sequelize, DataTypes){
       }
     }, {
     	classMethods: {
-    		associate: function(models){
-                WechatAccount.hasMany(models.Client, {
-                    onDelete: "SET NULL",
-                    foreignKey: {
-                        allowNull: true
-                    }
-                });
-            }
+
     	}
     });
 
-    return WechatAccount;
+    return QywxAccount;
 }

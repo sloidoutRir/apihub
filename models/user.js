@@ -24,27 +24,27 @@ module.exports = function(sequelize, DataTypes) {
     }
     //Account lockout properties
     // http://devsmash.com/blog/implementing-max-login-attempts-with-mongoose
-    , loginAttempts: { 
+    , loginAttempts: {
       type: DataTypes.INTEGER
-      , default: 0 
+      , default: 0
       , field: 'login_attempts'
     }
-    , lockUntil: { 
+    , lockUntil: {
       type: DataTypes.DATE
       , field: 'login_until'
     }
-    , email: { 
+    , email: {
       type: DataTypes.STRING
       , allowNull: true
       , unique: true
       , validate: {
           isEmail: true
         }
-      , set: function(v) { 
+      , set: function(v) {
         return this.setDataValue('email', _.toLower(v));
       }
     }
-    , mobile: { //TODO: Add custom mobile phone format validation 
+    , mobile: { //TODO: Add custom mobile phone format validation
       type: DataTypes.STRING,
       unique: true
     }
@@ -70,8 +70,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING
       , field: 'wechat_headimage'
     }
-    , activated: { 
-      type: DataTypes.BOOLEAN, default: false 
+    , activated: {
+      type: DataTypes.BOOLEAN, default: false
     }
     , firstName: {
       type: DataTypes.STRING, field: 'first_name'
@@ -82,7 +82,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models){
-        
+
       }
       , getAuthenticated: function(username, password, cb) {
             this.find({ where: { username: username } })

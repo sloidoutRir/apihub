@@ -4,7 +4,13 @@ var express         = require('express')
     , cookieParser  = require('cookie-parser')
     , bodyParser    = require('body-parser')
     , config        = require('./config')()
-    , debug         = require('debug')('http');
+    , debug         = require('debug')('http')
+    , oauth2Handler = require('express-oauth2-handler')
+    , vericode      = require('express-vericode')
+    , VerificationProvider = require('./libs/PgVerificationProvider')()
+    , HuyiSmsHandler = require('sms-gateway-huyi');
+
+
 
 
 // Object that stores application level settings
@@ -22,16 +28,13 @@ var settings    = {
 // var db = require('./models/db')(config.mongodb.conn);
 
 var app             = express()
-    , consoleApp    = express()
-    , admin         = express() //The sub app - administion
-    , identity      = express() //The sub app - identity service provider 
     , api           = express();
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.set('trust proxy', config.express.trustProxy); //Because it is always befind the proxy 
+app.set('trust proxy', config.express.trustProxy); //Because it is always befind the proxy
 
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(bodyParser.json());
@@ -39,15 +42,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser("oauth2isgreatforcloudapps", config.cookie));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(vericode({
+  whitelist: [ /\/oauth2\/register/ ]
+  ,verificationProvider: VerificationProvider
+  ,expires: 5 * 60 * 1000
+  ,smsTemplate: "您抢到的Fun抢福袋价值888元扮靓大福袋的代码为${veri_code}，请在2月28日前前往C&A官网www.canda.cn使用，具体使用规则请参见活动说明"
+  ,smsHandler: HuyiSmsHandler({
+    gateway: 'http://121.199.16.178/webservice/sms.php?method=Submit'
+    ,account: 'cf_obizsoft'
+    ,password: 'a123456'
+  })
+}));
+
+app.use(oauth2Handler({
+  secret: settings.config.jwt.secret
+  ,authProvider: require('./libs/PgAuthProvider')()
+}));
+
 
 // app.use('/admin', admin);
 // var adminRoutes = require('./admin')(admin, settings);
-
-app.use('/console', consoleApp);
-var consoleRoutes = require('./routes/console')(consoleApp, settings);
-
-app.use('/identity', identity);
-var accountRoutes = require('./routes/identity')(identity, settings);
+//
+// app.use('/console', consoleApp);
+// var consoleRoutes = require('./routes/console')(consoleApp, settings);
+//
+// app.use('/identity', identity);
+// var accountRoutes = require('./routes/identity')(identity, settings);
 
 app.use('/api', api);
 var apiRoutes = require('./routes/api')(api, settings);

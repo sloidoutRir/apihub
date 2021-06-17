@@ -9,7 +9,24 @@ app.set('port', process.env.PORT || 3000);
  *	Initialize sequelize once before app start to listen
  */
 models.sequelize.sync().then(function () {
-  var server = app.listen(app.get('port'), function() {
-    debug('Express server listening on port ' + server.address().port);
+  /**
+   *  Initialize default data
+   */
+  models.User.create({
+    username: 'ehe888'
+    , password: '123456'
+    , email: 'lei.he@aivics.com'
+    , mobile: '13764211365'
+    , firstName: '磊'
+    , lastName: '何'
+  })
+  .then(function(user){
+    debug("user create");
+    var server = app.listen(app.get('port'), function() {
+      debug('Express server listening on port ' + server.address().port);
+    });
+  })
+  .catch(function(err){
+    debug("create error", err);
   });
 });
